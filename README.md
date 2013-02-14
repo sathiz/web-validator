@@ -1,4 +1,4 @@
 web-validator
 =============
 
-A set of methods useful for validating web requests.
+A few simple web validation functions.

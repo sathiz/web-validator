@@ -1,0 +1,35 @@
+{
+	"author": "Max Nachlinger <max.nachlinger@gmail.com>",
+	"name": "web-validator",
+	"description": "A few simple web validation functions",
+	"homepage": "https://github.com/maxnachlinger/web-validator",
+	"keywords": ["validation"],
+	"version": "0.0.1",
+	"bugs": {
+		"url": "https://github.com/maxnachlinger/web-validator/issues"
+	},
+	"contributors": [
+		"Max Nachlinger <max.nachlinger@gmail.com>"
+	],
+	"licenses": {
+		"type": "MIT"
+	},
+	"scripts": {
+		"test": "tap tests/*.js"
+	},
+	"main": "lib/",
+	"dependencies": {
+		"async": "~0.1.22",
+		"underscore": "~1.4.4"
+	},
+	"devDependencies": {
+		"tap": "~0.4.0"
+	},
+	"optionalDependencies": {},
+	"engines": {
+		"node": "*"
+	},
+	"publishConfig": {
+		"registry": "https://registry.npmjs.com/"
+	}
+}
