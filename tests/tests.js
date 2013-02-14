@@ -1,3 +1,4 @@
+var util = require('util');
 var _ = require('underscore');
 var test = require('tap').test;
 var webValidator = require('..');
@@ -37,22 +38,28 @@ test('isNumericArray works', function (t) {
 	t.notOk(validator.isNumericArray([]), "an empty array is not a numeric array");
 	t.notOk(validator.isNumericArray('123'), "a numeric string is not a numeric array");
 	t.notOk(validator.isNumericArray(123), "a number is not a numeric array");
-	t.ok(validator.isNumericArray([1,2,3]), "an array of numbers is considered a numeric array (a truly shocking tautology!)");
-	t.ok(validator.isNumericArray(['1','2','3']), "an array of numeric strings is considered a numeric array");
+	t.ok(validator.isNumericArray([1, 2, 3]), "an array of numbers is considered a numeric array (a truly shocking tautology!)");
+	t.ok(validator.isNumericArray(['1', '2', '3']), "an array of numeric strings is considered a numeric array");
 	t.end();
 });
 
-test('validate tests', function (t) {
+test('validate works as expected', function (t) {
 	var validation = {
-		source: {key0:'test', key1:null, key2:'test2', key3:'test3' },
+		source: {key0: 'test', key1: null, key2: 'test2', key3: 'test3' },
 		validator: {
-			key0:{required:true, validator: function(value) { return false; }},
-			key1:{required:true, validator: function(value) { return true; }},
-			key2:{required:false, validator: function(value) { return false; }}
+			key0: {required: true, validator: function (value) {
+				return false;
+			}},
+			key1: {required: true, validator: function (value) {
+				return true;
+			}},
+			key2: {required: false, validator: function (value) {
+				return false;
+			}}
 		}
 	};
 
-	t.test('validate sync tests', function(t) {
+	t.test('validate sync works as expected', function (t) {
 		var res = validator.validate(validation);
 		t.ok(res.indexOf('test is not a valid value for key0') !== -1, "Invokes key validation function");
 		t.ok(res.indexOf('key1 is required') !== -1, "Honors required flag");
@@ -60,8 +67,8 @@ test('validate tests', function (t) {
 		t.end();
 	});
 
-	t.test('validate async tests', function(t) {
-		validator.validate(validation, function(err,res) {
+	t.test('validate async works as expected', function (t) {
+		validator.validate(validation, function (err, res) {
 			t.ok(res.indexOf('test is not a valid value for key0') !== -1, "Invokes key validation function");
 			t.ok(res.indexOf('key1 is required') !== -1, "Honors required flag");
 			t.ok(res.indexOf('test2 is not a valid value for key2') !== -1, "Fails on optional values which still fail the validation function");
@@ -69,10 +76,38 @@ test('validate tests', function (t) {
 		});
 	});
 
-	t.test('validate sync tests', function(t) {
+	t.test('validate returns an array of errors when asked to do so', function (t) {
 		var validator2 = new webValidator({errorsReturnedAs: 'array'});
 		var res = validator2.validate(validation);
-		t.ok(_.isArray(res), "Returns error in an array when setup to do so");
+		t.ok(_.isArray(res), "Returns an array of errors");
 		t.end();
+	});
+
+	t.test('validate returns an error string when asked to do so', function (t) {
+		var validator2 = new webValidator({errorsReturnedAs: 'string'});
+		var res = validator2.validate(validation);
+		t.ok(_.isString(res), "Returns an error string");
+		t.end();
+	});
+
+	t.test('validate returns an error object when asked to do so', function (t) {
+		var validator2 = new webValidator({errorsReturnedAs: 'error'});
+		var res = validator2.validate(validation);
+		t.ok(util.isError(res), "Returns an error object");
+		t.end();
+	});
+
+	t.test('throws a somewhat helpful exception on a bad return-type', function (t) {
+		var error;
+		try {
+			new webValidator({errorsReturnedAs: 'fun'});
+		}
+		catch (e) {
+			error = e;
+		}
+		finally {
+			t.ok(error, 'Throws exception');
+			t.end();
+		}
 	});
 });
