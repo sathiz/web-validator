@@ -13,7 +13,7 @@ npm install web-validator
 ```javascript
 var async = require('async');
 var webValidator = require('web-validator');
-var validator = new webValidator({errorsReturnedAs: 'error'});
+webValidator.setErrorsReturnedAs('error'); // or 'string', or 'array'
 
 module.exports = function (req, res) {
 	async.series([
@@ -25,7 +25,7 @@ module.exports = function (req, res) {
 	})
 
 	function validate(cb) {
-		return validator.validate([{
+		return webValidator.validate([{
 			source: req.params,
 			validator: {
 				id: { required:true, validator: validator.isNumeric } // built in method
@@ -50,7 +50,6 @@ module.exports = function (req, res) {
 ### Sync version
 ```javascript
 var webValidator = require('web-validator');
-var validator = new webValidator();
 
 module.exports = function (req, res) {
 	var errors = validate();
@@ -59,7 +58,7 @@ module.exports = function (req, res) {
 	// etc
 
 	function validate() {
-		return validator.validate([{
+		return webValidator.validate([{
 			source: req.params,
 			validator: {
 				id: { required:true, validator: validator.isNumeric } // built in method
@@ -80,9 +79,13 @@ module.exports = function (req, res) {
 ```
 
 ### Error return-types
-* array - (default) returns an array of error message strings
+```javascript
+var webValidator = require('web-validator');
+webValidator.setErrorsReturnedAs('error'); // or 'string', or 'array'
+```
+* error - (default) returns a new Error object with a statusCode of 400 and a message containing all errors in a comma-separated string
+* array - returns an array of error message strings
 * string - returns all errors in a comma-separated string
-* error - returns a new Error object with a statusCode of 400 and a message containing all errors in a comma-separated string
 
 ## License
 

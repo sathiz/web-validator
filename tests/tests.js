@@ -1,8 +1,7 @@
 var util = require('util');
 var _ = require('underscore');
 var test = require('tap').test;
-var webValidator = require('..');
-validator = new webValidator();
+var validator = require('..');
 
 test('isNumeric works', function (t) {
 	t.notOk(validator.isNumeric(''), "an empty string is not numeric");
@@ -60,6 +59,7 @@ test('validate works as expected', function (t) {
 	};
 
 	t.test('validate sync works as expected', function (t) {
+		validator.setErrorsReturnedAs('string');
 		var res = validator.validate(validation);
 		t.ok(res.indexOf('test is not a valid value for key0') !== -1, "Invokes key validation function");
 		t.ok(res.indexOf('key1 is required') !== -1, "Honors required flag");
@@ -68,6 +68,7 @@ test('validate works as expected', function (t) {
 	});
 
 	t.test('validate async works as expected', function (t) {
+		validator.setErrorsReturnedAs('string');
 		validator.validate(validation, function (err, res) {
 			t.ok(res.indexOf('test is not a valid value for key0') !== -1, "Invokes key validation function");
 			t.ok(res.indexOf('key1 is required') !== -1, "Honors required flag");
@@ -77,22 +78,22 @@ test('validate works as expected', function (t) {
 	});
 
 	t.test('validate returns an array of errors when asked to do so', function (t) {
-		var validator2 = new webValidator({errorsReturnedAs: 'array'});
-		var res = validator2.validate(validation);
+		validator.setErrorsReturnedAs('array');
+		var res = validator.validate(validation);
 		t.ok(_.isArray(res), "Returns an array of errors");
 		t.end();
 	});
 
 	t.test('validate returns an error string when asked to do so', function (t) {
-		var validator2 = new webValidator({errorsReturnedAs: 'string'});
-		var res = validator2.validate(validation);
+		validator.setErrorsReturnedAs('string');
+		var res = validator.validate(validation);
 		t.ok(_.isString(res), "Returns an error string");
 		t.end();
 	});
 
 	t.test('validate returns an error object when asked to do so', function (t) {
-		var validator2 = new webValidator({errorsReturnedAs: 'error'});
-		var res = validator2.validate(validation);
+		validator.setErrorsReturnedAs('error');
+		var res = validator.validate(validation);
 		t.ok(util.isError(res), "Returns an error object");
 		t.end();
 	});
@@ -100,7 +101,7 @@ test('validate works as expected', function (t) {
 	t.test('throws a somewhat helpful exception on a bad return-type', function (t) {
 		var error;
 		try {
-			new webValidator({errorsReturnedAs: 'fun'});
+			validator.setErrorsReturnedAs('fun');
 		}
 		catch (e) {
 			error = e;
