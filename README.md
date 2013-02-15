@@ -84,9 +84,9 @@ module.exports = function (req, res) {
 var webValidator = require('web-validator');
 var validator = new webValidator({errorsReturnedAs: 'error'}); // or 'string', or 'array'
 ```
-error - (default) returns a new Error object with a statusCode of 400 and a message containing all errors in a comma-separated string
-array - returns an array of error message strings
-string - returns all errors in a comma-separated string
+* error - (default) returns a new Error object with a statusCode of 400 and a message containing all errors in a comma-separated string
+* array - returns an array of error message strings
+* string - returns all errors in a comma-separated string
 
 ## License
 
