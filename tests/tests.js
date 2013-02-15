@@ -14,6 +14,21 @@ test('isNumeric works', function (t) {
 	t.end();
 });
 
+test('isNumericBool works', function (t) {
+	t.notOk(validator.isNumericBool(''), "an empty string is not bool");
+	t.notOk(validator.isNumericBool('123'), "a numeric string is not bool");
+	t.notOk(validator.isNumericBool(123), "bunch of number is not bool");
+	t.notOk(validator.isNumericBool('a123'), "a string with a letter and numbers is not bool");
+	t.notOk(validator.isNumericBool('abc'), "a string with letters is not bool");
+	t.notOk(validator.isNumericBool('!@#$'), "a string with all special characters is not bool");
+	t.ok(validator.isNumericBool(0), "0 is a bool for false");
+	t.ok(validator.isNumericBool(1), "1 is a bool for true");
+	t.ok(validator.isNumericBool('1'), "1 string is a bool for true");
+	t.ok(validator.isNumericBool('0'), "0 string is a bool for false");
+	t.end();
+});
+
+
 test('isAlphaNumeric works', function (t) {
 	t.notOk(validator.isAlphaNumeric(''), "an empty string is not alpha-numeric");
 	t.ok(validator.isAlphaNumeric('123'), "a numeric string is alpha-numeric");
