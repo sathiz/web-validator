@@ -53,7 +53,7 @@ var webValidator = require('web-validator');
 
 module.exports = function (req, res) {
 	var errors = validate();
-	if (errors.length)
+	if (errors)
 		return res.send(401);
 	// etc
 
